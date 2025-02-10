@@ -77,13 +77,3 @@ Sinta-se à vontade para contribuir com este projeto!
 
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo LICENSE para mais detalhes.
 
-
----
-
-### 🚀 **Instruções para Subir o Novo README.md**
-1. Salve o conteúdo acima em seu arquivo `README.md` local.
-2. Faça o commit e push para o repositório:
-   ```bash
-   git add README.md
-   git commit -m "Atualizado README.md"
-   git push origin main
