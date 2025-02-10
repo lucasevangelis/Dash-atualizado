@@ -1,0 +1,10 @@
+# Ignorar o arquivo .env para proteger senhas e chaves de API
+.env
+
+# Ignorar arquivos de cache e dependências temporárias
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar arquivos específicos do Streamlit
+.streamlit/

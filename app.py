@@ -1,175 +1,222 @@
 import streamlit as st
-import pandas as pd
-import plotly.express as px
+import json
+import os
+import auth  # ✅ Corrigido para autenticação
 
-st.set_page_config(layout="wide")
 
-# Carregar os dados
-df = pd.read_csv("datasets/data.csv", sep=";", encoding="Windows-1252", parse_dates=["Data"], dayfirst=True)
-df["Mês"] = df["Data"].dt.month
-df["Dia"] = df["Data"].dt.day
+# 📌 Verifica login antes de carregar qualquer conteúdo
+if not st.session_state.get("logado", False):
+    auth.login()
+    st.stop()
 
-# Barra lateral
-st.sidebar.header("Filtros")
-pagina = st.sidebar.radio(
-    "Escolha a página",
-    ["Resumo Geral", "Análise Total", "Análise por Piso", "Análise por Posição", "Análise por Observação", "Tabela Completa"]
+# 📌 Configuração inicial da página
+st.set_page_config(
+    layout="wide",
+    page_title="📋 Checklist de Pisos",
+    page_icon="📊"
 )
 
-# Filtro de Data (exceto para "Análise Total")
-if pagina != "Análise Total":
-    data_selecionada = st.sidebar.selectbox("Selecione uma Data", sorted(df["Data"].dt.strftime("%d/%m/%Y").unique()))
-    df_filtrado = df[df["Data"] == pd.to_datetime(data_selecionada, format="%d/%m/%Y")]
-else:
-    df_filtrado = df  # Para Análise Total, considera todos os dados
+# 📌 Bem-vindo
+usuario = st.session_state.get('usuario', '').capitalize()
+st.title(f"Bem-vindo, {usuario}! 🎉")
 
-# Função para criar KPIs com ícones
-def exibir_kpi(icon_url, label, value):
-    st.markdown(
-        f"""
-        <div style='display: flex; align-items: center; padding: 10px; background-color: #f4f4f4; border-radius: 8px;'>
-            <img src='{icon_url}' width='40' height='40' style='margin-right: 15px;'/>
-            <div>
-                <h5 style='margin: 0; font-size: 16px; color: #333;'>{label}</h5>
-                <h3 style='margin: 0; font-size: 24px; color: #2C3E50;'>{value}</h3>
-            </div>
+# 📌 Opção de logout
+if st.sidebar.button("🔓 Sair"):
+    st.session_state.clear()  # Reseta a sessão para deslogar
+    st.rerun()
+
+# 📌 Caminho para armazenar os destinatários dos alertas
+EMAILS_JSON = "emails_destinatarios.json"
+
+# 📌 Função para carregar destinatários do JSON
+def carregar_destinatarios():
+    if os.path.exists(EMAILS_JSON):
+        with open(EMAILS_JSON, "r") as f:
+            return json.load(f)
+    return ["lucasevan14@hotmail.com"]  # Destinatário padrão
+
+# 📌 Função para salvar destinatários
+def salvar_destinatarios(destinatarios):
+    with open(EMAILS_JSON, "w") as f:
+        json.dump(destinatarios, f)
+
+# 📌 Estilização avançada para um visual premium
+st.markdown(
+    """
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F8F9FA;
+            color: #2C3E50;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 40px;
+            background: linear-gradient(to bottom, #FFFFFF, #F8F9FA);
+            border-radius: 12px;
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1.2s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .title {
+            font-size: 44px;
+            font-weight: bold;
+            color: #2C3E50;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .subtitle {
+            font-size: 24px;
+            color: #34495E;
+            margin-top: -10px;
+        }
+        .description {
+            font-size: 18px;
+            color: #566573;
+            margin: 20px auto;
+            max-width: 900px;
+            line-height: 1.6;
+        }
+        .features {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        .feature {
+            flex: 1;
+            background: #FFFFFF;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            text-align: center;
+            max-width: 300px;
+            margin: 10px;
+        }
+        .feature:hover {
+            transform: translateY(-8px);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .feature img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+        .feature h3 {
+            font-size: 20px;
+            color: #2C3E50;
+        }
+        .feature p {
+            font-size: 16px;
+            color: #566573;
+        }
+        .gif-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 15px;
+            color: #7F8C8D;
+            font-style: italic;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# 📌 Layout principal
+st.markdown("<div class='container'>", unsafe_allow_html=True)
+
+st.markdown("<h1 class='title'>📋 Checklist de Pisos</h1>", unsafe_allow_html=True)
+st.markdown("<h2 class='subtitle'>Monitoramento Inteligente da Infraestrutura Operacional</h2>", unsafe_allow_html=True)
+
+st.markdown(
+    """
+    <p class='description'>
+        O <strong>Dashboard de Checklist de Pisos</strong> é uma solução poderosa para análise e gestão da infraestrutura operacional. 
+        Com gráficos interativos, dados detalhados e filtros inteligentes, 
+        você pode tomar decisões mais assertivas e garantir uma infraestrutura eficiente e segura.
+    </p>
+    """,
+    unsafe_allow_html=True,
+)
+
+# 📌 Seção de Recursos
+st.markdown(
+    """
+    <div class="features">
+        <div class="feature">
+            <img src="https://img.icons8.com/fluency/96/data-configuration.png" alt="Análise de Dados">
+            <h3>🔍 Análise Detalhada</h3>
+            <p>Visualize rapidamente as áreas mais críticas e tome ações corretivas de forma eficaz.</p>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        <div class="feature">
+            <img src="https://img.icons8.com/fluency/96/combo-chart.png" alt="Gráficos Interativos">
+            <h3>📊 Dashboards Interativos</h3>
+            <p>Explore tendências e padrões com gráficos dinâmicos e relatórios completos.</p>
+        </div>
+        <div class="feature">
+            <img src="https://img.icons8.com/fluency/96/document.png" alt="Relatórios Inteligentes">
+            <h3>📥 Relatórios Personalizados</h3>
+            <p>Gere e exporte relatórios profissionais para monitoramento detalhado.</p>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-# URLs de ícones para KPIs
-ICONES = {
-    "piso_critico": "https://img.icons8.com/color/48/floor-plan.png",
-    "data_critica": "https://img.icons8.com/color/48/calendar.png",
-    "total_posicoes": "https://img.icons8.com/color/48/marker.png",
-    "total_observacoes": "https://img.icons8.com/color/48/document.png",
-}
+# 📌 GIF ilustrativo
+st.markdown(
+    """
+    <div class="gif-container">
+        <img src="https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif" alt="GIF de Análise de Dados" width="550px">
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-# Páginas
-if pagina == "Resumo Geral":
-    st.title("Resumo Geral")
-    if not df_filtrado.empty:
-        piso_critico = df_filtrado["Piso"].value_counts().idxmax()
-        data_critica = data_selecionada
-        total_posicoes = len(df_filtrado["Posição"].unique())
-        total_observacoes = len(df_filtrado["Observação"])
+# 📌 Apenas ADMIN pode gerenciar destinatários
+if st.session_state.get("tipo") == "admin":
+    st.markdown("---")
+    st.subheader("✉️ **Gerenciar Destinatários dos Alertas**")
 
-        # KPIs com ícones
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            exibir_kpi(ICONES["piso_critico"], "Piso Mais Crítico", piso_critico)
-        with col2:
-            exibir_kpi(ICONES["data_critica"], "Data Mais Crítica", data_critica)
-        with col3:
-            exibir_kpi(ICONES["total_posicoes"], "Total de Posições", total_posicoes)
-        with col4:
-            exibir_kpi(ICONES["total_observacoes"], "Total de Observações", total_observacoes)
+    destinatarios = carregar_destinatarios()
+    novo_email = st.text_input("Adicionar novo e-mail", placeholder="Digite um e-mail válido")
 
-        # Gráfico de Tendência
-        tendencia = df.groupby("Data").size().reset_index(name="Ocorrências")
-        tendencia_fig = px.line(
-            tendencia,
-            x="Data",
-            y="Ocorrências",
-            title="Tendência de Melhoras ou Piora (Resumo Geral)",
-            markers=True,
-        )
-        st.plotly_chart(tendencia_fig, use_container_width=True)
-    else:
-        st.error("Nenhum dado encontrado para a data selecionada.")
+    if st.button("Adicionar"):
+        if novo_email and "@" in novo_email:
+            destinatarios.append(novo_email)
+            salvar_destinatarios(destinatarios)
+            st.success(f"✅ {novo_email} foi adicionado!")
+            st.rerun()
+        else:
+            st.error("❌ E-mail inválido.")
 
-elif pagina == "Análise Total":
-    st.title("Análise Total")
-    if not df.empty:
-        piso_critico = df["Piso"].value_counts().idxmax()
-        data_critica = df["Data"].value_counts().idxmax().strftime("%d/%m/%Y")
-        total_posicoes = len(df["Posição"].unique())
-        total_observacoes = len(df["Observação"])
+    st.subheader("📋 Destinatários Atuais")
+    for email in destinatarios:
+        st.write(f"📧 {email}")
 
-        # KPIs com ícones
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            exibir_kpi(ICONES["piso_critico"], "Piso Mais Crítico", piso_critico)
-        with col2:
-            exibir_kpi(ICONES["data_critica"], "Data Mais Crítica", data_critica)
-        with col3:
-            exibir_kpi(ICONES["total_posicoes"], "Total de Posições", total_posicoes)
-        with col4:
-            exibir_kpi(ICONES["total_observacoes"], "Total de Observações", total_observacoes)
+    if st.button("🗑️ Remover Todos"):
+        salvar_destinatarios(["lucasevan14@hotmail.com"])
+        st.success("✅ Lista redefinida!")
+        st.rerun()
 
-        # Treemap para análise dos pisos
-        treemap_fig = px.treemap(
-            df,
-            path=["Piso"],
-            values="Posição",
-            title="Distribuição dos Pisos",
-        )
-        st.plotly_chart(treemap_fig, use_container_width=True)
+# 📌 Rodapé
+st.markdown(
+    """
+    <div class="footer">
+        Desenvolvido por Evangelistalp
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
-        # Gráfico de Tendência
-        tendencia = df.groupby("Data").size().reset_index(name="Ocorrências")
-        tendencia_fig = px.line(
-            tendencia,
-            x="Data",
-            y="Ocorrências",
-            title="Tendência Geral de Ocorrências",
-            markers=True,
-        )
-        st.plotly_chart(tendencia_fig, use_container_width=True)
-
-        # Tabela de Top 5 Posições
-        st.subheader("Top 5 Posições Mais Repetidas")
-        top_5_posicoes = df["Posição"].value_counts().head(5).reset_index()
-        top_5_posicoes.columns = ["Posição", "Total"]
-        st.table(top_5_posicoes)
-    else:
-        st.error("Nenhum dado disponível para análise total.")
-
-elif pagina == "Análise por Piso":
-    st.title("Análise por Piso")
-    piso_data = df_filtrado["Piso"].value_counts().reset_index()
-    piso_data.columns = ["Piso", "Total"]
-    if not piso_data.empty:
-        fig_piso = px.bar(piso_data, x="Piso", y="Total", title="Ocorrências por Piso", text="Total")
-        st.plotly_chart(fig_piso, use_container_width=True)
-
-        # Observações mais comuns por Piso
-        st.subheader("Observações Mais Comuns por Piso")
-        observacoes_por_piso = df_filtrado.groupby("Piso")["Observação"].value_counts().reset_index(name="Total")
-        st.dataframe(observacoes_por_piso, use_container_width=True)
-    else:
-        st.warning("Nenhum dado para análise por piso.")
-
-elif pagina == "Análise por Posição":
-    st.title("Análise por Posição")
-    posicao_data = df_filtrado["Posição"].value_counts().reset_index()
-    posicao_data.columns = ["Posição", "Total"]
-    posicao_data = posicao_data.head(10)  # Mostrar apenas o top 10
-    if not posicao_data.empty:
-        st.subheader("Top 10 Posições Mais Repetidas")
-        st.table(posicao_data)
-    else:
-        st.warning("Nenhum dado para análise por posição.")
-
-elif pagina == "Análise por Observação":
-    st.title("Análise por Observação")
-    observacao_data = df_filtrado["Observação"].value_counts().reset_index()
-    observacao_data.columns = ["Observação", "Total"]
-    if not observacao_data.empty:
-        fig_observacao = px.bar(
-            observacao_data,
-            x="Observação",
-            y="Total",
-            title="Ocorrências por Observação",
-            text="Total",
-            width=1000,
-            height=600,
-        )
-        st.plotly_chart(fig_observacao, use_container_width=True)
-    else:
-        st.warning("Nenhum dado para análise por observação.")
-
-elif pagina == "Tabela Completa":
-    st.title("Tabela Completa")
-    st.dataframe(df, width=1200, height=600)
+st.markdown("</div>", unsafe_allow_html=True)
