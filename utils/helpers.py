@@ -11,8 +11,13 @@ def carregar_dados(uploaded_file=None):
     ou o arquivo padrão.
     """
     try:
-        # Define os parâmetros de leitura do CSV
-        read_params = {"sep": ";", "encoding": "latin1", "quotechar": "'"}
+        # Define os parâmetros de leitura do CSV com base no feedback do usuário
+        read_params = {
+            "sep": ";",
+            "encoding": "cp1252",  # Alterado de latin1 para cp1252
+            "quotechar": "'",
+            "quoting": 1  # Equivalente a csv.QUOTE_ALL
+        }
 
         if uploaded_file:
             # Se um arquivo foi carregado, usa-o
