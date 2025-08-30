@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-from utils.helpers import carregar_dados
+from utils.helpers import carregar_dados, load_css
 import auth  # ✅ Verificação de login
 
 # Verifica login antes de carregar qualquer conteúdo
@@ -16,83 +16,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Estilo CSS para Layout Moderno com Efeito Espelhado Aprimorado
-def aplicar_estilo():
-    st.markdown(
-        """
-        <style>
-            h1, h2, h3 { 
-                color: white; 
-                text-align: center; 
-                font-weight: bold; 
-            }
-            .linha { 
-                border-top: 2px dashed #ccc; 
-                margin: 20px 0; 
-            }
-            .kpi-container { 
-                display: flex; 
-                flex-wrap: wrap; 
-                justify-content: space-around; 
-            }
-            .kpi {
-                display: flex; 
-                align-items: center; 
-                justify-content: space-between;
-                padding: 20px; 
-                margin: 10px;
-                background: linear-gradient(145deg, #1E1E1E, #2A2A2A);
-                border-radius: 15px;
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-                color: white;
-                text-align: center;
-                width: 100%;
-                transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-                position: relative;
-                overflow: hidden;
-            }
-            .kpi:hover {
-                transform: scale(1.05);
-                box-shadow: 0 10px 20px rgba(255, 215, 0, 0.8);
-            }
-            /* Efeito espelhado aprimorado: reflexão com desvanecimento */
-            .espelhado::after {
-                content: "";
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                height: 100%;
-                background: inherit;
-                transform: scaleY(-1);
-                opacity: 0.2;
-                pointer-events: none;
-                filter: blur(2px);
-                mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
-            }
-            /* Customização da sidebar */
-            .sidebar .block-container {
-                background: #2A2A2A;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-            }
-            .sidebar .stMultiSelect, .sidebar .stButton {
-                color: white;
-                background: linear-gradient(145deg, #1E1E1E, #3A3A3A);
-                border-radius: 8px;
-                padding: 10px;
-            }
-            .sidebar .stButton:hover {
-                background: linear-gradient(145deg, #3A3A3A, #1E1E1E);
-                transform: scale(1.05);
-            }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+# Carrega o CSS centralizado
+load_css("styles/style.css")
 
-aplicar_estilo()
+# Adiciona a classe de corpo específica da página
+st.markdown('<div class="analise-total-body">', unsafe_allow_html=True)
 
 # Carregar os Dados
 df = carregar_dados(st.session_state.get("uploaded_file"))
@@ -220,3 +148,5 @@ with col2:
     )
     fig_bar_dia.update_traces(marker=dict(line=dict(width=1.5, color='DarkSlateGrey')), hoverinfo="x+y")
     st.plotly_chart(ajustar_grafico(fig_bar_dia), use_container_width=True)
+
+st.markdown('</div>', unsafe_allow_html=True)

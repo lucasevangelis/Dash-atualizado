@@ -43,3 +43,13 @@ def carregar_dados(uploaded_file=None):
     except Exception as e:
         st.error(f"Ocorreu um erro ao carregar ou processar o arquivo: {e}")
         return pd.DataFrame()
+
+def load_css(file_name: str):
+    """
+    Carrega e injeta um arquivo CSS no aplicativo Streamlit.
+    """
+    try:
+        with open(file_name) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.error(f"Arquivo CSS não encontrado: {file_name}")

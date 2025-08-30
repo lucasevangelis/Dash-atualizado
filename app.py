@@ -10,11 +10,12 @@ from dotenv import load_dotenv  # Para carregar variáveis do .env
 
 # Tenta importar carregar_dados; se não houver, define um placeholder para testes
 try:
-    from utils.helpers import carregar_dados
+    from utils.helpers import carregar_dados, load_css
 except ImportError:
-    def carregar_dados():
-        # Exemplo: carrega dados de um CSV chamado 'dados.csv'
-        return pd.read_csv('dados.csv')
+    def carregar_dados(uploaded_file=None):
+        return pd.DataFrame()
+    def load_css(file_name):
+        pass
 
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
@@ -91,79 +92,8 @@ def salvar_destinatarios(destinatarios):
     with open(EMAILS_JSON, "w") as f:
         json.dump(destinatarios, f)
 
-# Estilização avançada para um visual premium
-st.markdown(
-    """
-    <style>
-        /* Importa fonte do Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #F8F9FA;
-            color: #2C3E50;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 40px;
-            background: linear-gradient(to bottom, #FFFFFF, #F8F9FA);
-            border-radius: 12px;
-            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 1.2s ease-in-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .title {
-            font-size: 44px;
-            font-weight: bold;
-            color: #2C3E50;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .subtitle {
-            font-size: 24px;
-            color: #34495E;
-            margin-top: -10px;
-        }
-        .description {
-            font-size: 18px;
-            color: #566573;
-            margin: 20px auto;
-            max-width: 900px;
-            line-height: 1.6;
-        }
-        .linha {
-            border-top: 3px solid linear-gradient(45deg, #FF6B6B, #FFD93D);
-            margin: 30px 10px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
-        }
-        .button-custom {
-            background: linear-gradient(45deg, #FF6B6B, #FFD93D);
-            color: #FFFFFF;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .button-custom:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 10px 20px rgba(255, 107, 107, 0.5);
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Carrega o CSS centralizado
+load_css("styles/style.css")
 
 # Layout principal
 st.markdown("<div class='container'>", unsafe_allow_html=True)
