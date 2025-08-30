@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
-from utils.helpers import carregar_dados
+from utils.helpers import carregar_dados, load_css
 from auth import login
 
 # Verifica login antes de carregar qualquer conteúdo
@@ -16,71 +16,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# CSS customizado para aprimorar o layout e a experiência do usuário
-custom_css = """
-<style>
-    :root {
-        --primary-color: #1E1E1E;
-        --accent-color: #FFD700;
-        --text-color: #FFFFFF;
-        --secondary-text: #CCCCCC;
-        --background-color: #121212;
-    }
-    body {
-        background-color: var(--background-color);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    h1, h2, h3, h4, h5, h6 {
-        color: var(--text-color);
-        text-align: center;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-    .linha {
-        border-top: 2px dashed var(--secondary-text);
-        margin: 20px 0;
-    }
-    .kpi {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        margin: 10px;
-        background-color: var(--primary-color);
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        transition: transform 0.2s;
-    }
-    .kpi:hover {
-        transform: scale(1.02);
-    }
-    .kpi-icon {
-        margin-right: 20px;
-    }
-    .kpi h5 {
-        margin: 0;
-        font-size: 18px;
-        color: var(--accent-color);
-    }
-    .kpi h3 {
-        margin: 0;
-        font-size: 28px;
-        color: var(--text-color);
-    }
-    .kpi p {
-        margin: 5px 0 0;
-        font-size: 16px;
-        color: var(--secondary-text);
-    }
-    .sidebar .sidebar-content {
-        background-color: var(--primary-color);
-    }
-    .filter-section {
-        margin-bottom: 20px;
-    }
-</style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
+# Carrega o CSS centralizado
+load_css("styles/style.css")
+
+# Adiciona a classe de corpo específica da página
+st.markdown('<div class="analise-piso-body">', unsafe_allow_html=True)
 
 # Carrega os dados com feedback visual e tratamento de exceção
 with st.spinner("Carregando dados..."):
@@ -200,3 +140,5 @@ if piso_selecionado:
         st.markdown(f"**📍 Posição Crítica no Piso {piso_selecionado}:** `{posicao_critica}`")
         st.markdown(f"**🔎 Observação Crítica no Piso {piso_selecionado}:** `{observacao_critica}`")
         st.dataframe(df_piso[["Posição", "Observação"]].reset_index(drop=True), use_container_width=True)
+
+st.markdown('</div>', unsafe_allow_html=True)

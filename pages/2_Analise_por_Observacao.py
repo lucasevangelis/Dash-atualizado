@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import auth
-from utils.helpers import carregar_dados
+from utils.helpers import carregar_dados, load_css
 
 # 🛑 Verifica login antes de carregar qualquer conteúdo
 if not st.session_state.get("logado", False):
@@ -16,74 +16,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# 🎨 Estilização CSS personalizada para um layout mais elegante e tipografia aprimorada
-st.markdown(
-    """
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(to right, #ece9e6, #ffffff);
-            color: #2C3E50;
-        }
-        h1, h2, h3 {
-            text-align: center;
-            color: #2C3E50;
-        }
-        .linha {
-            border-top: 3px dashed #ccc;
-            margin: 20px 0;
-        }
-        .stMetric {
-            text-align: center;
-        }
-        @media screen and (max-width: 768px) {
-            h1, h2, h3 {
-                font-size: 20px;
-            }
-            .stMetric {
-                font-size: 14px;
-            }
-        }
-        /* Estilização customizada dos cards de KPI com efeito 3D, hover e cores profissionais */
-        .kpi-card {
-            background-color: #ffffff;
-            border: 2px solid #d1dce5;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 10px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-align: center;
-        }
-        .kpi-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-        }
-        .kpi-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-            color: #2980b9;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-        }
-        .kpi-title {
-            font-size: 16px;
-            color: #34495e;
-            text-align: center;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        .kpi-value {
-            font-size: 26px;
-            font-weight: bold;
-            color: #2c3e50;
-            text-align: center;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Carrega o CSS centralizado
+load_css("styles/style.css")
+
+# Adiciona a classe de corpo específica da página
+st.markdown('<div class="analise-observacao-body">', unsafe_allow_html=True)
 
 # Função para exibir os KPIs como cards bonitos com ícones profissionais
 def display_kpi(label, value, icon):
@@ -221,3 +158,5 @@ if observacao_selecionada:
     with col2:
         st.markdown(f"**📅 Posições - {data2}**")
         st.dataframe(posicoes_data2.reset_index(drop=True), use_container_width=True, height=400)
+
+st.markdown('</div>', unsafe_allow_html=True)

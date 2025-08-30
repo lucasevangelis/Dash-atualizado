@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils.helpers import carregar_dados
+from utils.helpers import carregar_dados, load_css
 from auth import login
 
 # 🛑 Verifica login antes de carregar qualquer conteúdo
@@ -15,62 +15,12 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# 🎨 Estilização CSS para um layout mais bonito, tipografia elegante e tabelas com visual UX aprimorado
-st.markdown(
-    """
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #f8f9fa;
-            color: #2C3E50;
-        }
-        h1, h2, h3 {
-            text-align: center;
-            color: #2C3E50;
-            font-weight: 600;
-        }
-        .linha {
-            border-top: 3px solid #ccc;
-            margin: 20px 0;
-        }
-        /* Estilização customizada para tabelas com visual moderno e UX aprimorado */
-        table.dataframe {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 20px 0;
-            font-size: 14px;
-        }
-        table.dataframe thead tr {
-            background-color: #2980b9;
-            color: #ffffff;
-            text-align: center;
-        }
-        table.dataframe tbody tr {
-            color: #2C3E50;
-        }
-        table.dataframe tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        table.dataframe tbody tr:hover {
-            background-color: #e6f2ff;
-        }
-        table.dataframe th, table.dataframe td {
-            padding: 12px 15px;
-            text-align: center;
-            color: inherit;
-        }
-        /* Ajustes responsivos */
-        @media screen and (max-width: 768px) {
-            h1, h2, h3 {
-                font-size: 18px;
-            }
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Carrega o CSS centralizado
+load_css("styles/style.css")
+
+# Adiciona a classe de corpo específica da página
+st.markdown('<div class="analise-posicao-body">', unsafe_allow_html=True)
+
 
 # Função para exibir uma tabela estilizada sem índice
 def display_styled_table(df):
@@ -158,3 +108,5 @@ if posicao_selecionada:
     
     # Exibe a tabela de observações estilizada
     display_styled_table(observacoes)
+
+st.markdown('</div>', unsafe_allow_html=True)

@@ -11,15 +11,23 @@ def carregar_dados(uploaded_file=None):
     ou o arquivo padrão.
     """
     try:
+        # Define os parâmetros de leitura do CSV com base no feedback do usuário
+        read_params = {
+            "sep": ";",
+            "encoding": "cp1252",  # Alterado de latin1 para cp1252
+            "quotechar": "'",
+            "quoting": 1  # Equivalente a csv.QUOTE_ALL
+        }
+
         if uploaded_file:
             # Se um arquivo foi carregado, usa-o
-            df = pd.read_csv(uploaded_file, sep=";", encoding="latin1")
+            df = pd.read_csv(uploaded_file, **read_params)
         else:
             # Caso contrário, usa o caminho padrão
             if not os.path.exists(CAMINHO_ARQUIVO_PADRAO):
                 st.error(f"Arquivo padrão não encontrado: {CAMINHO_ARQUIVO_PADRAO}")
                 return pd.DataFrame()
-            df = pd.read_csv(CAMINHO_ARQUIVO_PADRAO, sep=";", encoding="latin1")
+            df = pd.read_csv(CAMINHO_ARQUIVO_PADRAO, **read_params)
 
         # Limpeza e processamento dos dados
         df.columns = df.columns.str.strip().str.replace("�", "ç", regex=False)
@@ -34,7 +42,16 @@ def carregar_dados(uploaded_file=None):
         df.rename(columns=colunas_corrigidas, inplace=True)
 
         if "Data" in df.columns:
+            # Converte a coluna 'Data', tratando erros
             df["Data"] = pd.to_datetime(df["Data"], dayfirst=True, errors="coerce")
+
+            # Remove linhas com datas inválidas (NaT) e avisa o usuário
+            original_rows = len(df)
+            df.dropna(subset=["Data"], inplace=True)
+            cleaned_rows = len(df)
+
+            if original_rows > cleaned_rows:
+                st.warning(f"{original_rows - cleaned_rows} linhas foram removidas por conterem datas inválidas.")
         else:
             st.warning("A coluna 'Data' não foi encontrada no arquivo.")
 
@@ -43,3 +60,13 @@ def carregar_dados(uploaded_file=None):
     except Exception as e:
         st.error(f"Ocorreu um erro ao carregar ou processar o arquivo: {e}")
         return pd.DataFrame()
+
+def load_css(file_name: str):
+    """
+    Carrega e injeta um arquivo CSS no aplicativo Streamlit.
+    """
+    try:
+        with open(file_name) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.error(f"Arquivo CSS não encontrado: {file_name}")
