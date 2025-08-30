@@ -42,7 +42,16 @@ def carregar_dados(uploaded_file=None):
         df.rename(columns=colunas_corrigidas, inplace=True)
 
         if "Data" in df.columns:
+            # Converte a coluna 'Data', tratando erros
             df["Data"] = pd.to_datetime(df["Data"], dayfirst=True, errors="coerce")
+
+            # Remove linhas com datas inválidas (NaT) e avisa o usuário
+            original_rows = len(df)
+            df.dropna(subset=["Data"], inplace=True)
+            cleaned_rows = len(df)
+
+            if original_rows > cleaned_rows:
+                st.warning(f"{original_rows - cleaned_rows} linhas foram removidas por conterem datas inválidas.")
         else:
             st.warning("A coluna 'Data' não foi encontrada no arquivo.")
 

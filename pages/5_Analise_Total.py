@@ -28,17 +28,16 @@ df = carregar_dados(st.session_state.get("uploaded_file"))
 # Filtros de Comparação no Sidebar
 with st.sidebar:
     st.markdown("## 🎛️ Filtros de Comparação")
-    # Garante que NaT (datas inválidas) sejam removidos antes de formatar
-    meses_unicos = df["Data"].dropna().dt.strftime("%Y-%m").unique()
+    meses_unicos = df["Data"].dt.strftime("%Y-%m").unique()
     mes_filtro = st.multiselect("📆 Selecione os meses para comparar", meses_unicos)
-    dias_unicos = df["Data"].dropna().dt.strftime("%d-%m-%Y").unique()
+    dias_unicos = df["Data"].dt.strftime("%d-%m-%Y").unique()
     dia_filtro = st.multiselect("📅 Selecione os dias para comparar", dias_unicos)
 
 df_filtrado = df.copy()
 if mes_filtro:
-    df_filtrado = df_filtrado[df_filtrado["Data"].dropna().dt.strftime("%Y-%m").isin(mes_filtro)]
+    df_filtrado = df_filtrado[df_filtrado["Data"].dt.strftime("%Y-%m").isin(mes_filtro)]
 if dia_filtro:
-    df_filtrado = df_filtrado[df_filtrado["Data"].dropna().dt.strftime("%d-%m-%Y").isin(dia_filtro)]
+    df_filtrado = df_filtrado[df_filtrado["Data"].dt.strftime("%d-%m-%Y").isin(dia_filtro)]
 
 if df_filtrado.empty:
     st.warning("⚠️ Nenhum dado disponível. Verifique o arquivo CSV.")
@@ -131,7 +130,7 @@ with col2:
 col1, col2 = st.columns(2)
 
 with col1:
-    mes_data = df_filtrado["Data"].dropna().dt.strftime("%Y-%m").value_counts().reset_index()
+    mes_data = df_filtrado["Data"].dt.strftime("%Y-%m").value_counts().reset_index()
     mes_data.columns = ["Mês", "Total"]
     fig_bar_mes = px.bar(
         mes_data, x="Mês", y="Total", title="📆 Ocorrências por Mês", 
@@ -141,7 +140,7 @@ with col1:
     st.plotly_chart(ajustar_grafico(fig_bar_mes), use_container_width=True)
 
 with col2:
-    dia_data = df_filtrado["Data"].dropna().dt.strftime("%d-%m-%Y").value_counts().reset_index()
+    dia_data = df_filtrado["Data"].dt.strftime("%d-%m-%Y").value_counts().reset_index()
     dia_data.columns = ["Dia", "Total"]
     fig_bar_dia = px.bar(
         dia_data, x="Dia", y="Total", title="📅 Ocorrências por Dia", 
