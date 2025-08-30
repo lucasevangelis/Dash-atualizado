@@ -46,7 +46,7 @@ if df.empty:
 
 # 📅 Barra lateral para filtros
 st.sidebar.title("📅 Filtros")
-datas_disponiveis = sorted(df["Data"].dt.strftime("%d/%m/%Y").unique())
+datas_disponiveis = sorted(df["Data"].dropna().dt.strftime("%d/%m/%Y").unique())
 data1 = st.sidebar.selectbox("Selecione a 1ª Data", datas_disponiveis, key="data1")
 data2 = st.sidebar.selectbox("Selecione a 2ª Data", datas_disponiveis, key="data2")
 

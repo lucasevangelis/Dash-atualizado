@@ -37,7 +37,7 @@ if df.empty:
 # Barra Lateral - Filtros
 st.sidebar.title("📅 Filtros")
 st.sidebar.markdown("Selecione as datas para comparação:")
-datas_disponiveis = sorted(df["Data"].dt.strftime("%d/%m/%Y").unique())
+datas_disponiveis = sorted(df["Data"].dropna().dt.strftime("%d/%m/%Y").unique())
 col1, col2 = st.sidebar.columns(2)
 data_1 = col1.selectbox("Data 1", datas_disponiveis, index=0)
 data_2 = col2.selectbox("Data 2", datas_disponiveis, index=1)

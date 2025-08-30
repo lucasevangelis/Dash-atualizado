@@ -37,7 +37,7 @@ if df.empty:
 
 # 📅 Barra lateral - Filtro de Data
 st.sidebar.title("📅 Filtros")
-datas_disponiveis = sorted(df["Data"].dt.strftime("%d/%m/%Y").unique())  # Converter datas para exibição
+datas_disponiveis = sorted(df["Data"].dropna().dt.strftime("%d/%m/%Y").unique())  # Converter datas para exibição
 data_selecionada = st.sidebar.selectbox("Selecione uma Data", datas_disponiveis)
 
 # 📌 Converter a string de data para datetime para filtrar corretamente
