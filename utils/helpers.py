@@ -11,15 +11,18 @@ def carregar_dados(uploaded_file=None):
     ou o arquivo padrão.
     """
     try:
+        # Define os parâmetros de leitura do CSV
+        read_params = {"sep": ";", "encoding": "latin1", "quotechar": "'"}
+
         if uploaded_file:
             # Se um arquivo foi carregado, usa-o
-            df = pd.read_csv(uploaded_file, sep=";", encoding="latin1")
+            df = pd.read_csv(uploaded_file, **read_params)
         else:
             # Caso contrário, usa o caminho padrão
             if not os.path.exists(CAMINHO_ARQUIVO_PADRAO):
                 st.error(f"Arquivo padrão não encontrado: {CAMINHO_ARQUIVO_PADRAO}")
                 return pd.DataFrame()
-            df = pd.read_csv(CAMINHO_ARQUIVO_PADRAO, sep=";", encoding="latin1")
+            df = pd.read_csv(CAMINHO_ARQUIVO_PADRAO, **read_params)
 
         # Limpeza e processamento dos dados
         df.columns = df.columns.str.strip().str.replace("�", "ç", regex=False)
