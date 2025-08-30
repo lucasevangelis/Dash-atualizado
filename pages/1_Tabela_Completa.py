@@ -109,7 +109,7 @@ st.title("Tabela Completa")
 st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
 
 # Carregar os Dados
-df = carregar_dados()
+df = carregar_dados(st.session_state.get("uploaded_file"))
 if df.empty:
     st.warning("⚠️ Nenhum dado disponível. Verifique o arquivo CSV.")
     st.stop()

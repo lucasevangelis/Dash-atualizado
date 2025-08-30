@@ -85,7 +85,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 # Carrega os dados com feedback visual e tratamento de exceção
 with st.spinner("Carregando dados..."):
     try:
-        df = carregar_dados()
+        df = carregar_dados(st.session_state.get("uploaded_file"))
     except Exception as e:
         st.error(f"Erro ao carregar dados: {e}")
         st.stop()

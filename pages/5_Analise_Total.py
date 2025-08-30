@@ -95,7 +95,7 @@ def aplicar_estilo():
 aplicar_estilo()
 
 # Carregar os Dados
-df = carregar_dados()
+df = carregar_dados(st.session_state.get("uploaded_file"))
 
 # Filtros de Comparação no Sidebar
 with st.sidebar:

@@ -68,6 +68,14 @@ if st.sidebar.button("🔓 Sair"):
     st.session_state.clear()  # Reseta a sessão para deslogar
     st.rerun()
 
+# Adiciona o seletor de arquivo na barra lateral
+st.sidebar.header("Carregar Novo Arquivo")
+uploaded_file = st.sidebar.file_uploader(
+    "Escolha um arquivo CSV", type=["csv"]
+)
+if uploaded_file:
+    st.session_state["uploaded_file"] = uploaded_file
+
 # Caminho para armazenar os destinatários dos alertas
 EMAILS_JSON = "emails_destinatarios.json"
 
@@ -259,9 +267,11 @@ if st.session_state.get("tipo") == "admin":
 # VERIFICAÇÃO DE OCORRÊNCIAS E ENVIO DO DASHBOARD POR E-MAIL COM OS DADOS DA DATA MAIS RECENTE
 # =============================================================================
 try:
-    df_pisos = carregar_dados()
+    # Carrega os dados (do arquivo carregado ou do padrão)
+    df_pisos = carregar_dados(st.session_state.get("uploaded_file"))
+
     # Se existir a coluna "Data", filtra os dados pela data mais recente
-    if "Data" in df_pisos.columns:
+    if "Data" in df_pisos.columns and not df_pisos.empty:
         recent_date = df_pisos["Data"].max()
         df_recent = df_pisos[df_pisos["Data"] == recent_date]
     else:
