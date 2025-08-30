@@ -78,7 +78,7 @@ def display_styled_table(df):
     st.markdown(html, unsafe_allow_html=True)
 
 # 📊 Carregar os dados
-df = carregar_dados()
+df = carregar_dados(st.session_state.get("uploaded_file"))
 
 # 📌 Verificar se os dados foram carregados corretamente
 if df.empty:

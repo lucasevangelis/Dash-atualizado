@@ -100,7 +100,7 @@ def display_kpi(label, value, icon):
 st.title("📊 Comparação de Observações por Data")
 
 # 📊 Carregar os dados
-df = carregar_dados()
+df = carregar_dados(st.session_state.get("uploaded_file"))
 
 # 📌 Verificar se os dados foram carregados corretamente
 if df.empty:
