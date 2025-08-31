@@ -1,428 +1,148 @@
-/* Importa fonte do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* =============================================================================
+   Global Theme & Variables
+   ========================================================================== */
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #F8F9FA;
-    color: #2C3E50;
-}
-
-.container {
-    max-width: 1100px;
-    margin: 20px auto;
-    padding: 40px;
-    background: linear-gradient(to bottom, #FFFFFF, #F8F9FA);
-    border-radius: 12px;
-    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    opacity: 0;
-    animation: fadeIn 1.2s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.title {
-    font-size: 44px;
-    font-weight: bold;
-    color: #2C3E50;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.subtitle {
-    font-size: 24px;
-    color: #34495E;
-    margin-top: -10px;
-}
-
-.description {
-    font-size: 18px;
-    color: #566573;
-    margin: 20px auto;
-    max-width: 900px;
-    line-height: 1.6;
-}
-
-.linha {
-    border-top: 3px solid linear-gradient(45deg, #FF6B6B, #FFD93D);
-    margin: 30px 10px;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { opacity: 0.7; }
-    50% { opacity: 1; }
-    100% { opacity: 0.7; }
-}
-
-.button-custom {
-    background: linear-gradient(45deg, #FF6B6B, #FFD93D);
-    color: #FFFFFF;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.button-custom:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 10px 20px rgba(255, 107, 107, 0.5);
-}
-
-/* Styles from pages/1_Tabela_Completa.py */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+/* Import a clean, modern font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 :root {
-    --primary-color: #0D0D0D;
-    --accent-gradient: linear-gradient(45deg, #FF6B6B, #FFD93D);
-    --text-color: #F0F0F0;
-    --header-bg: #1A1A1A;
-    --border-color: #444;
-    --button-text: #FFFFFF;
-    --card-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
-    --hover-scale: 1.05;
-    --transition-speed: 0.3s;
+    --primary-bg: #1E1E1E;
+    --secondary-bg: #2C2C2C;
+    --primary-accent: #007AFF;
+    --secondary-accent: #FFD700;
+    --primary-text: #F0F0F0;
+    --secondary-text: #A0A0A0;
+    --border-color: #444444;
+    --card-shadow: rgba(0, 0, 0, 0.2);
+    --font-family: 'Inter', sans-serif;
 }
 
-/* General page styling from 1_Tabela_Completa.py */
-.tabela-completa-body {
-    background: linear-gradient(135deg, #1f1c2c, #928dab);
-    font-family: 'Roboto Condensed', sans-serif;
-    margin: 0;
-    padding: 0;
+/* =============================================================================
+   Base & Global Styles
+   ========================================================================== */
+
+body {
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    font-family: var(--font-family);
 }
 
-.tabela-completa-body h1,
-.tabela-completa-body h2,
-.tabela-completa-body h3 {
-    color: var(--text-color);
+h1, h2, h3, h4, h5, h6 {
+    color: var(--primary-text);
+    font-weight: 700;
     text-align: center;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
-/* Estilização do AgGrid */
-.ag-theme-streamlit {
-    height: auto;
-    max-height: 650px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-    border: 2px solid var(--border-color);
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+
+p, .stMarkdown {
+    color: var(--secondary-text);
+    font-size: 1rem;
 }
 
-.ag-theme-streamlit .ag-header {
-    background-color: var(--header-bg) !important;
-    color: var(--text-color) !important;
-    font-size: 18px !important;
-    font-weight: 700;
+/* Custom horizontal line */
+.linha {
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
 }
 
-.ag-theme-streamlit .ag-row {
-    font-size: 16px !important;
-    color: var(--text-color);
+/* =============================================================================
+   Streamlit Component Overrides
+   ========================================================================== */
+
+/* Main container styling */
+.main .block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
-/* Customização do botão de download */
-div.stDownloadButton button {
-    background: var(--accent-gradient);
-    color: var(--button-text);
+/* Sidebar styling */
+.st-emotion-cache-16txtl3 {
+    background-color: var(--secondary-bg);
+    border-right: 1px solid var(--border-color);
+}
+
+/* Buttons */
+.stButton>button {
+    background-color: var(--primary-accent);
+    color: white;
+    border-radius: 8px;
     border: none;
-    padding: 14px 28px;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-    display: block;
-    margin: 20px auto;
-}
-
-div.stDownloadButton button:hover {
-    transform: scale(var(--hover-scale));
-    box-shadow: 0px 10px 20px rgba(255, 107, 107, 0.5);
-}
-
-/* Customização da sidebar */
-.sidebar .sidebar-content {
-    background-color: var(--header-bg);
-}
-
-/* Styles from pages/2_Analise_por_Observacao.py */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
-
-.analise-observacao-body {
-    font-family: 'Montserrat', sans-serif;
-    background: linear-gradient(to right, #ece9e6, #ffffff);
-    color: #2C3E50;
-}
-
-.analise-observacao-body h1,
-.analise-observacao-body h2,
-.analise-observacao-body h3 {
-    text-align: center;
-    color: #2C3E50;
-}
-
-.analise-observacao-body .stMetric {
-    text-align: center;
-}
-
-@media screen and (max-width: 768px) {
-    .analise-observacao-body h1,
-    .analise-observacao-body h2,
-    .analise-observacao-body h3 {
-        font-size: 20px;
-    }
-    .analise-observacao-body .stMetric {
-        font-size: 14px;
-    }
-}
-
-/* Estilização customizada dos cards de KPI com efeito 3D, hover e cores profissionais */
-.kpi-card {
-    background-color: #ffffff;
-    border: 2px solid #d1dce5;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 10px;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    text-align: center;
-}
-
-.kpi-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-}
-
-.kpi-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
-    color: #2980b9;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-}
-
-.kpi-title {
-    font-size: 16px;
-    color: #34495e;
-    text-align: center;
-    margin-bottom: 10px;
+    padding: 0.75rem 1.5rem;
     font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.kpi-value {
-    font-size: 26px;
-    font-weight: bold;
-    color: #2c3e50;
-    text-align: center;
-}
-
-/* Styles from pages/3_Analise_por_Posicao.py */
-.analise-posicao-body {
-    font-family: 'Montserrat', sans-serif;
-    background: #f8f9fa;
-    color: #2C3E50;
-}
-
-.analise-posicao-body h1,
-.analise-posicao-body h2,
-.analise-posicao-body h3 {
-    text-align: center;
-    color: #2C3E50;
-    font-weight: 600;
-}
-
-/* Estilização customizada para tabelas com visual moderno e UX aprimorado */
-table.dataframe {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 20px 0;
-    font-size: 14px;
-}
-
-table.dataframe thead tr {
-    background-color: #2980b9;
-    color: #ffffff;
-    text-align: center;
-}
-
-table.dataframe tbody tr {
-    color: #2C3E50;
-}
-
-table.dataframe tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-table.dataframe tbody tr:hover {
-    background-color: #e6f2ff;
-}
-
-table.dataframe th, table.dataframe td {
-    padding: 12px 15px;
-    text-align: center;
-    color: inherit;
-}
-
-/* Ajustes responsivos */
-@media screen and (max-width: 768px) {
-    .analise-posicao-body h1,
-    .analise-posicao-body h2,
-    .analise-posicao-body h3 {
-        font-size: 18px;
-    }
-}
-
-/* Styles from pages/4_Analise_por_Piso.py */
-.analise-piso-body {
-    --primary-color: #1E1E1E;
-    --accent-color: #FFD700;
-    --text-color: #FFFFFF;
-    --secondary-text: #CCCCCC;
-    --background-color: #121212;
-    background-color: var(--background-color);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.analise-piso-body h1,
-.analise-piso-body h2,
-.analise-piso-body h3,
-.analise-piso-body h4,
-.analise-piso-body h5,
-.analise-piso-body h6 {
-    color: var(--text-color);
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.analise-piso-body .linha {
-    border-top: 2px dashed var(--secondary-text);
-}
-
-.kpi {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    margin: 10px;
-    background-color: var(--primary-color);
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: transform 0.2s;
-}
-
-.kpi:hover {
+.stButton>button:hover {
+    background-color: #0056b3; /* A darker shade of the primary accent */
     transform: scale(1.02);
 }
 
-.kpi-icon {
-    margin-right: 20px;
-}
-
-.kpi h5 {
-    margin: 0;
-    font-size: 18px;
-    color: var(--accent-color);
-}
-
-.kpi h3 {
-    margin: 0;
-    font-size: 28px;
-    color: var(--text-color);
-}
-
-.kpi p {
-    margin: 5px 0 0;
-    font-size: 16px;
-    color: var(--secondary-text);
-}
-
-.analise-piso-body .sidebar .sidebar-content {
-    background-color: var(--primary-color);
-}
-
-.filter-section {
-    margin-bottom: 20px;
-}
-
-/* Styles from pages/5_Analise_Total.py */
-.analise-total-body h1,
-.analise-total-body h2,
-.analise-total-body h3 {
-    color: white;
-    text-align: center;
-    font-weight: bold;
-}
-
-.kpi-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.analise-total-body .kpi {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px;
-    margin: 10px;
-    background: linear-gradient(145deg, #1E1E1E, #2A2A2A);
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-    color: white;
-    text-align: center;
-    width: 100%;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    position: relative;
-    overflow: hidden;
-}
-
-.analise-total-body .kpi:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.8);
-}
-
-/* Efeito espelhado aprimorado: reflexão com desvanecimento */
-.espelhado::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: inherit;
-    transform: scaleY(-1);
-    opacity: 0.2;
-    pointer-events: none;
-    filter: blur(2px);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
-}
-
-/* Customização da sidebar */
-.analise-total-body .sidebar .block-container {
-    background: #2A2A2A;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-}
-
-.analise-total-body .sidebar .stMultiSelect,
-.analise-total-body .sidebar .stButton {
-    color: white;
-    background: linear-gradient(145deg, #1E1E1E, #3A3A3A);
+/* Selectbox / Dropdowns */
+.stSelectbox div[data-baseweb="select"] {
+    background-color: var(--secondary-bg);
     border-radius: 8px;
-    padding: 10px;
 }
 
-.analise-total-body .sidebar .stButton:hover {
-    background: linear-gradient(145deg, #3A3A3A, #1E1E1E);
-    transform: scale(1.05);
+/* Dataframes */
+.stDataFrame {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+/* =============================================================================
+   Custom Component Styles (e.g., KPIs)
+   ========================================================================== */
+
+.kpi-card {
+    background-color: var(--secondary-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 0.5rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px var(--card-shadow);
+}
+
+.kpi-title {
+    font-size: 1rem;
+    color: var(--secondary-text);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 2.25rem;
+    color: var(--primary-text);
+    font-weight: 700;
+}
+
+.kpi-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-accent);
+}
+
+/* =============================================================================
+   AgGrid Specific Styles (Dark Theme)
+   ========================================================================== */
+.ag-theme-streamlit {
+    --ag-background-color: var(--secondary-bg);
+    --ag-header-background-color: var(--primary-bg);
+    --ag-border-color: var(--border-color);
+    --ag-row-border-color: var(--border-color);
+    --ag-font-family: var(--font-family);
+    --ag-font-size: 1rem;
+    --ag-foreground-color: var(--primary-text);
+    --ag-header-foreground-color: var(--primary-text);
+    --ag-odd-row-background-color: var(--secondary-bg);
+    --ag-row-hover-color: #3a3a3a;
 }

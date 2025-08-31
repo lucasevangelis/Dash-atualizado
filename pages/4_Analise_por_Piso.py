@@ -19,9 +19,6 @@ st.set_page_config(
 # Carrega o CSS centralizado
 load_css("styles/style.css")
 
-# Adiciona a classe de corpo específica da página
-st.markdown('<div class="analise-piso-body">', unsafe_allow_html=True)
-
 # Carrega os dados com feedback visual e tratamento de exceção
 with st.spinner("Carregando dados..."):
     try:
@@ -50,15 +47,15 @@ df_data2 = df[df["Data"] == pd.to_datetime(data_2, format="%d/%m/%Y")]
 st.title("📊 Análise por Piso")
 st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
 
-# Função para exibir os KPIs com layout aprimorado
-def exibir_kpi(titulo, valor, detalhe, icon_url):
+# Função para exibir os KPIs com o novo estilo unificado
+def exibir_kpi(titulo, valor, detalhe, icon_class):
     st.markdown(
         f"""
-        <div class='kpi'>
-            <img class='kpi-icon' src='{icon_url}' width='50'/>
+        <div class="kpi-card">
+            <div class="kpi-icon">{icon_class}</div>
             <div>
-                <h5>{titulo}</h5>
-                <h3>{valor}</h3>
+                <div class="kpi-title">{titulo}</div>
+                <div class="kpi-value">{valor}</div>
                 <p>{detalhe}</p>
             </div>
         </div>
@@ -87,15 +84,15 @@ with kpi_col1:
     exibir_kpi(
         f"Piso Crítico ({data_1})",
         piso_critico_data1,
-        f"Posição: {posicao_critica_data1} | Obs: {observacao_critica_data1}",
-        "https://img.icons8.com/color/48/floor-plan.png",
+        f"Posição: {posicao_critica_data1}",
+        "🏢",
     )
 with kpi_col2:
     exibir_kpi(
         f"Piso Crítico ({data_2})",
         piso_critico_data2,
-        f"Posição: {posicao_critica_data2} | Obs: {observacao_critica_data2}",
-        "https://img.icons8.com/color/48/floor-plan.png",
+        f"Posição: {posicao_critica_data2}",
+        "🏢",
     )
 
 st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
@@ -140,5 +137,3 @@ if piso_selecionado:
         st.markdown(f"**📍 Posição Crítica no Piso {piso_selecionado}:** `{posicao_critica}`")
         st.markdown(f"**🔎 Observação Crítica no Piso {piso_selecionado}:** `{observacao_critica}`")
         st.dataframe(df_piso[["Posição", "Observação"]].reset_index(drop=True), use_container_width=True)
-
-st.markdown('</div>', unsafe_allow_html=True)

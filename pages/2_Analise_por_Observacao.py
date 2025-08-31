@@ -19,19 +19,20 @@ st.set_page_config(
 # Carrega o CSS centralizado
 load_css("styles/style.css")
 
-# Adiciona a classe de corpo específica da página
-st.markdown('<div class="analise-observacao-body">', unsafe_allow_html=True)
-
-# Função para exibir os KPIs como cards bonitos com ícones profissionais
+# Função para exibir os KPIs com o novo estilo unificado
 def display_kpi(label, value, icon):
-    html = f"""
-    <div class="kpi-card">
-        <div class="kpi-icon">{icon}</div>
-        <div class="kpi-title">{label}</div>
-        <div class="kpi-value">{value}</div>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+    st.markdown(
+        f"""
+        <div class="kpi-card">
+            <div class="kpi-icon">{icon}</div>
+            <div>
+                <div class="kpi-title">{label}</div>
+                <div class="kpi-value">{value}</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # 🏷️ Título da Página
 st.title("📊 Comparação de Observações por Data")
@@ -158,5 +159,3 @@ if observacao_selecionada:
     with col2:
         st.markdown(f"**📅 Posições - {data2}**")
         st.dataframe(posicoes_data2.reset_index(drop=True), use_container_width=True, height=400)
-
-st.markdown('</div>', unsafe_allow_html=True)

@@ -96,55 +96,19 @@ def salvar_destinatarios(destinatarios):
 load_css("styles/style.css")
 
 # Layout principal
-st.markdown("<div class='container'>", unsafe_allow_html=True)
-
-st.markdown("<h1 class='title'>📋 Checklist de Pisos</h1>", unsafe_allow_html=True)
-st.markdown("<h2 class='subtitle'>Monitoramento Inteligente da Infraestrutura Operacional</h2>", unsafe_allow_html=True)
+st.title("📋 Checklist de Pisos")
+st.subheader("Monitoramento Inteligente da Infraestrutura Operacional")
 
 st.markdown(
     """
-    <p class='description'>
-        O <strong>Dashboard de Checklist de Pisos</strong> é uma solução poderosa para análise e gestão da infraestrutura operacional. 
-        Com gráficos interativos, dados detalhados e filtros inteligentes, 
-        você pode tomar decisões mais assertivas e garantir uma infraestrutura eficiente e segura.
-    </p>
-    """,
-    unsafe_allow_html=True,
+    O **Dashboard de Checklist de Pisos** é uma solução poderosa para análise e gestão da infraestrutura operacional.
+    Com gráficos interativos, dados detalhados e filtros inteligentes,
+    você pode tomar decisões mais assertivas e garantir uma infraestrutura eficiente e segura.
+    """
 )
 
-# Seção de Recursos (exemplo ilustrativo)
-st.markdown(
-    """
-    <div style="display:flex; justify-content:center; gap:25px; flex-wrap:wrap; margin-top:30px;">
-        <div style="background:#FFFFFF; padding:25px; border-radius:12px; box-shadow: 0px 5px 15px rgba(0,0,0,0.12); max-width:300px; text-align:center;">
-            <img src="https://img.icons8.com/fluency/96/data-configuration.png" alt="Análise de Dados">
-            <h3 style="color:#2C3E50;">🔍 Análise Detalhada</h3>
-            <p style="color:#566573; font-size:16px;">Visualize rapidamente as áreas mais críticas e tome ações corretivas de forma eficaz.</p>
-        </div>
-        <div style="background:#FFFFFF; padding:25px; border-radius:12px; box-shadow: 0px 5px 15px rgba(0,0,0,0.12); max-width:300px; text-align:center;">
-            <img src="https://img.icons8.com/fluency/96/combo-chart.png" alt="Gráficos Interativos">
-            <h3 style="color:#2C3E50;">📊 Dashboards Interativos</h3>
-            <p style="color:#566573; font-size:16px;">Explore tendências e padrões com gráficos dinâmicos e relatórios completos.</p>
-        </div>
-        <div style="background:#FFFFFF; padding:25px; border-radius:12px; box-shadow: 0px 5px 15px rgba(0,0,0,0.12); max-width:300px; text-align:center;">
-            <img src="https://img.icons8.com/fluency/96/document.png" alt="Relatórios Inteligentes">
-            <h3 style="color:#2C3E50;">📥 Relatórios Personalizados</h3>
-            <p style="color:#566573; font-size:16px;">Gere e exporte relatórios profissionais para monitoramento detalhado.</p>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
-# GIF ilustrativo
-st.markdown(
-    """
-    <div style="text-align:center; margin-top:40px;">
-        <img src="https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif" alt="GIF de Análise de Dados" width="550px">
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+# Adiciona um separador
+st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
 
 # =============================================================================
 # GERENCIAMENTO DE E-MAILS (Apenas ADMIN)
@@ -265,5 +229,3 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-st.markdown("</div>", unsafe_allow_html=True)

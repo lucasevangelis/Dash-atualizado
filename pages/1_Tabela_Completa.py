@@ -22,7 +22,6 @@ st.set_page_config(
 load_css("styles/style.css")
 
 # Título da Página
-st.markdown('<div class="tabela-completa-body">', unsafe_allow_html=True)
 st.title("Tabela Completa")
 st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
 
@@ -67,5 +66,3 @@ st.download_button(
     key="download-csv",
     help="Clique para baixar a tabela completa em formato CSV"
 )
-
-st.markdown('</div>', unsafe_allow_html=True)

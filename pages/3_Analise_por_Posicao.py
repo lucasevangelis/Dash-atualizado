@@ -18,15 +18,6 @@ st.set_page_config(
 # Carrega o CSS centralizado
 load_css("styles/style.css")
 
-# Adiciona a classe de corpo específica da página
-st.markdown('<div class="analise-posicao-body">', unsafe_allow_html=True)
-
-
-# Função para exibir uma tabela estilizada sem índice
-def display_styled_table(df):
-    html = df.to_html(index=False, classes="dataframe", border=0)
-    st.markdown(html, unsafe_allow_html=True)
-
 # 📊 Carregar os dados
 df = carregar_dados(st.session_state.get("uploaded_file"))
 
@@ -61,8 +52,7 @@ st.subheader(f"🏆 Top 10 Posições Mais Repetidas ({data_selecionada})")
 posicao_data = df_filtrado["Posição"].value_counts().head(10).reset_index()
 posicao_data.columns = ["Posição", "Total"]
 
-# Exibe a tabela estilizada em HTML para melhor visualização
-display_styled_table(posicao_data)
+st.dataframe(posicao_data, use_container_width=True)
 
 st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
 
@@ -106,7 +96,4 @@ if posicao_selecionada:
         unsafe_allow_html=True
     )
     
-    # Exibe a tabela de observações estilizada
-    display_styled_table(observacoes)
-
-st.markdown('</div>', unsafe_allow_html=True)
+    st.dataframe(observacoes, use_container_width=True)

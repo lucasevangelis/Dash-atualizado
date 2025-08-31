@@ -24,75 +24,96 @@ USUARIOS = {
 
 def login():
     """
-    Função de login com layout e design inspirados no Figma.
-    Remove subtítulo e força tema claro para evitar contraste baixo em modo escuro.
+    Função de login com um design escuro e profissional.
     """
     st.markdown(
         """
         <style>
-            /* Força modo claro para evitar problemas de contraste em tema escuro */
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
             :root {
-                color-scheme: light;
+                --primary-bg: #1E1E1E;
+                --secondary-bg: #2C2C2C;
+                --primary-accent: #007AFF;
+                --primary-text: #F0F0F0;
+                --secondary-text: #A0A0A0;
+                --border-color: #444444;
+                --font-family: 'Inter', sans-serif;
             }
-            /* Fundo gradiente suave */
+
+            /* Força o tema escuro na página de login */
             body {
-                background: linear-gradient(135deg, #F0F2F5, #C9D6FF) !important;
+                background-color: var(--primary-bg) !important;
             }
-            /* Container de login */
+
+            /* Container de login centralizado */
             .login-container {
-                max-width: 420px;
-                margin: 120px auto;
-                padding: 48px;
-                background: #FFFFFF;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            /* Card de login */
+            .login-card {
+                background-color: var(--secondary-bg);
+                padding: 3rem;
                 border-radius: 16px;
-                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-                text-align: center;
-                font-family: 'Inter', sans-serif;
-                color: #333333;
+                border: 1px solid var(--border-color);
+                width: 100%;
+                max-width: 450px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             }
+
             .login-title {
-                font-size: 36px;
+                font-size: 2.5rem;
                 font-weight: 700;
-                color: #333333;
-                margin-bottom: 20px;
+                color: var(--primary-text);
+                text-align: center;
+                margin-bottom: 2rem;
             }
-            /* Inputs */
-            .stTextInput input {
-                font-size: 16px !important;
-                padding: 12px !important;
-                border: 1px solid #E0E0E0 !important;
-                border-radius: 8px !important;
-                background-color: #F9F9F9 !important;
-                color: #333333 !important;
-            }
+
+            /* Estilo dos inputs */
             .stTextInput label {
-                color: #333333 !important;
-                font-weight: 500 !important;
-                margin-bottom: 8px !important;
+                color: var(--secondary-text) !important;
+                font-weight: 600 !important;
+                margin-bottom: 0.5rem !important;
             }
+            .stTextInput input {
+                background-color: var(--primary-bg) !important;
+                color: var(--primary-text) !important;
+                border: 1px solid var(--border-color) !important;
+                border-radius: 8px !important;
+                padding: 0.75rem !important;
+            }
+            .stTextInput input:focus {
+                border-color: var(--primary-accent) !important;
+                box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.5) !important;
+            }
+
             /* Botão de login */
             .stButton>button {
                 width: 100%;
-                background-color: #007AFF;
-                color: #FFFFFF;
-                padding: 14px 0;
+                background-color: var(--primary-accent);
+                color: white;
+                padding: 0.75rem 0;
                 border-radius: 8px;
-                font-size: 16px;
+                font-size: 1rem;
                 font-weight: 600;
                 border: none;
-                cursor: pointer;
-                margin-top: 30px;
-                transition: background-color 0.3s, transform 0.3s;
+                margin-top: 1.5rem;
+                transition: background-color 0.2s, transform 0.2s;
             }
             .stButton>button:hover {
-                background-color: #005BB5;
+                background-color: #0056b3;
                 transform: scale(1.02);
             }
+
         </style>
         <div class="login-container">
-            <h2 class="login-title">Bem-vindo ao Dashboard</h2>
-        </div>
-        """,
+            <div class="login-card">
+                <h2 class="login-title">Bem-vindo</h2>
+    """,
         unsafe_allow_html=True
     )
 
@@ -111,6 +132,9 @@ def login():
                 st.rerun()  # Substituindo st.experimental_rerun() por st.rerun()
             else:
                 st.error("❌ Usuário ou senha incorretos. Tente novamente.")
+
+    # Fechamento das divs do container
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
 if "logado" not in st.session_state:
     st.session_state["logado"] = False

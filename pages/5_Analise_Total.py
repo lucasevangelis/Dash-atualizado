@@ -19,9 +19,6 @@ st.set_page_config(
 # Carrega o CSS centralizado
 load_css("styles/style.css")
 
-# Adiciona a classe de corpo específica da página
-st.markdown('<div class="analise-total-body">', unsafe_allow_html=True)
-
 # Carregar os Dados
 df = carregar_dados(st.session_state.get("uploaded_file"))
 
@@ -60,16 +57,15 @@ def ajustar_grafico(fig):
     fig.update_traces(marker=dict(line=dict(width=2, color='black')), selector=dict(type="pie"))
     return fig
 
-# Função para Exibir KPIs com efeito espelhado
-def exibir_kpi(titulo, valor, detalhe, icon_url):
+# Função para Exibir KPIs com o novo estilo unificado
+def exibir_kpi(titulo, valor, icon):
     st.markdown(
         f"""
-        <div class='kpi espelhado'>
-            <img class='kpi-icon' src='{icon_url}' width='50'/>
+        <div class="kpi-card">
+            <div class="kpi-icon">{icon}</div>
             <div>
-                <h5>{titulo}</h5>
-                <h3>{valor}</h3>
-                <p>{detalhe}</p>
+                <div class="kpi-title">{titulo}</div>
+                <div class="kpi-value">{valor}</div>
             </div>
         </div>
         """,
@@ -84,22 +80,22 @@ observacao_critica = df_filtrado["Observação"].value_counts().idxmax()
 total_posicoes = len(df_filtrado["Posição"])
 total_observacoes = len(df_filtrado["Observação"])
 
-st.subheader("📈 KPIs")
+st.subheader("📈 Indicadores Chave de Performance")
 kpi_row1_col1, kpi_row1_col2, kpi_row1_col3 = st.columns(3)
 kpi_row2_col1, kpi_row2_col2, kpi_row2_col3 = st.columns(3)
 
 with kpi_row1_col1:
-    exibir_kpi("Piso Mais Crítico", piso_critico, "Piso com maior quantidade de ocorrências.", "https://img.icons8.com/color/48/floor-plan.png")
+    exibir_kpi("Piso Mais Crítico", piso_critico, "🏢")
 with kpi_row1_col2:
-    exibir_kpi("Posição Mais Crítica", posicao_critica, "Posição mais recorrente nos dados.", "https://img.icons8.com/color/48/marker.png")
+    exibir_kpi("Posição Mais Crítica", posicao_critica, "📍")
 with kpi_row1_col3:
-    exibir_kpi("Data Mais Crítica", data_critica, "Data com maior número de ocorrências.", "https://img.icons8.com/color/48/calendar.png")
+    exibir_kpi("Data Mais Crítica", data_critica, "📅")
 with kpi_row2_col1:
-    exibir_kpi("Observação Mais Crítica", observacao_critica, "Observação mais registrada.", "https://img.icons8.com/color/48/idea.png")
+    exibir_kpi("Observação Mais Crítica", observacao_critica, "❗️")
 with kpi_row2_col2:
-    exibir_kpi("Total de Posições", total_posicoes, "Número total de registros de posições.", "https://img.icons8.com/color/48/pin.png")
+    exibir_kpi("Total de Posições", f"{total_posicoes:,}", "🔢")
 with kpi_row2_col3:
-    exibir_kpi("Total de Observações", total_observacoes, "Número total de registros de observações.", "https://img.icons8.com/color/48/document.png")
+    exibir_kpi("Total de Observações", f"{total_observacoes:,}", "🔢")
 
 st.markdown("<div class='linha'></div>", unsafe_allow_html=True)
 
@@ -148,5 +144,3 @@ with col2:
     )
     fig_bar_dia.update_traces(marker=dict(line=dict(width=1.5, color='DarkSlateGrey')), hoverinfo="x+y")
     st.plotly_chart(ajustar_grafico(fig_bar_dia), use_container_width=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
