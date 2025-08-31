@@ -22,10 +22,6 @@ USUARIOS = {
     USUARIO_GESTOR: {"senha": SENHA_GESTOR, "tipo": "gestor"},
 }
 
-# =============================================================================
-# 4. INTERFACE DE LOGIN (UI)
-# =============================================================================
-
 def login():
     """
     Função de login com layout e design inspirados no Figma.
