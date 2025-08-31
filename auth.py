@@ -2,68 +2,30 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 
-import bcrypt
-
 # Carrega variáveis do .env (caso exista localmente)
 if os.path.exists(".env"):
     load_dotenv()
 
-# =============================================================================
-# 1. CARREGAMENTO DE CREDENCIAIS E CONFIGURAÇÕES
-# =============================================================================
+# Obtém credenciais do ambiente (local ou Streamlit Cloud)
+USUARIO_ADMIN = os.getenv("USUARIO_ADMIN") or st.secrets["USUARIO_ADMIN"]
+SENHA_ADMIN = os.getenv("SENHA_ADMIN") or st.secrets["SENHA_ADMIN"]
 
-def get_credential(key: str) -> str:
-    """
-    Obtém uma credencial do ambiente ou dos segredos do Streamlit de forma segura.
-    """
-    value = os.getenv(key)
-    if value:
-        return value
-    if hasattr(st, "secrets") and key in st.secrets:
-        return st.secrets[key]
-    # Retorna string vazia para evitar erros NoneType
-    return ""
+USUARIO_GESTOR = os.getenv("USUARIO_GESTOR") or st.secrets["USUARIO_GESTOR"]
+SENHA_GESTOR = os.getenv("SENHA_GESTOR") or st.secrets["SENHA_GESTOR"]
 
-# Obtém as credenciais usando a função auxiliar
-USUARIO_ADMIN = get_credential("USUARIO_ADMIN")
-SENHA_ADMIN = get_credential("SENHA_ADMIN")
-USUARIO_GESTOR = get_credential("USUARIO_GESTOR")
-SENHA_GESTOR = get_credential("SENHA_GESTOR")
-EMAIL_REMETENTE = get_credential("EMAIL_REMETENTE")
-EMAIL_SENHA_APP = get_credential("EMAIL_SENHA_APP")
+EMAIL_REMETENTE = os.getenv("EMAIL_REMETENTE") or st.secrets["EMAIL_REMETENTE"]
+EMAIL_SENHA_APP = os.getenv("EMAIL_SENHA_APP") or st.secrets["EMAIL_SENHA_APP"]
 
-# =============================================================================
-# 2. ESTRUTURA DE DADOS DE USUÁRIOS
-# =============================================================================
-
-# As senhas (hashes) são carregadas do ambiente
+# Dicionário de usuários
 USUARIOS = {
-    USUARIO_ADMIN: {"senha_hash": SENHA_ADMIN, "tipo": "admin"},
-    USUARIO_GESTOR: {"senha_hash": SENHA_GESTOR, "tipo": "gestor"},
+    USUARIO_ADMIN: {"senha": SENHA_ADMIN, "tipo": "admin"},
+    USUARIO_GESTOR: {"senha": SENHA_GESTOR, "tipo": "gestor"},
 }
-
-# =============================================================================
-# 3. FUNÇÕES DE AUTENTICAÇÃO E LÓGICA
-# =============================================================================
-
-def verificar_senha(senha: str, senha_hash: str) -> bool:
-    """
-    Verifica se a senha fornecida (em texto plano) corresponde ao hash armazenado.
-    """
-    try:
-        # A senha fornecida e o hash armazenado devem ser codificados para bytes
-        return bcrypt.checkpw(senha.encode("utf-8"), senha_hash.encode("utf-8"))
-    except (ValueError, TypeError):
-        # Retorna False se o hash for inválido ou ocorrer outro erro
-        return False
-
-# =============================================================================
-# 4. INTERFACE DE LOGIN (UI)
-# =============================================================================
 
 def login():
     """
-    Renderiza a interface de login e gerencia o estado da sessão.
+    Função de login com layout e design inspirados no Figma.
+    Remove subtítulo e força tema claro para evitar contraste baixo em modo escuro.
     """
     st.markdown(
         """
@@ -141,13 +103,12 @@ def login():
         submit = st.form_submit_button("Entrar")
 
         if submit:
-            user_data = USUARIOS.get(usuario)
-            if user_data and verificar_senha(senha, user_data["senha_hash"]):
+            if usuario in USUARIOS and USUARIOS[usuario]["senha"] == senha:
                 st.session_state["logado"] = True
                 st.session_state["usuario"] = usuario
-                st.session_state["tipo"] = user_data["tipo"]
+                st.session_state["tipo"] = USUARIOS[usuario]["tipo"]
                 st.success(f"✅ Bem-vindo, {usuario}! Redirecionando...")
-                st.rerun()
+                st.rerun()  # Substituindo st.experimental_rerun() por st.rerun()
             else:
                 st.error("❌ Usuário ou senha incorretos. Tente novamente.")
 
