@@ -8,3 +8,13 @@ __pycache__/
 
 # Ignorar arquivos específicos do Streamlit
 .streamlit/
+
+# Arquivos de ambiente virtual do Python
+/new_env/
+
+# Arquivo de segredos local (NUNCA ENVIAR!)
+.env
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
