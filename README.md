@@ -1,3 +1,172 @@
+Projeto: Containerização de Aplicação Web (Python/Streamlit) com Docker
+
+    Este documento é um registro técnico do processo de containerização de uma aplicação de dashboard interativo desenvolvida em Python com o framework Streamlit. O objetivo foi criar um ambiente portátil, seguro e reproduzível, e o processo serviu como um estudo de caso aprofundado sobre resolução de problemas em ambientes Docker.
+
+1. Visão Geral e Objetivos
+
+O projeto principal, um dashboard de análise de dados, foi desenvolvido em Python e possui um conjunto específico de dependências de bibliotecas. O objetivo desta iniciativa foi containerizar a aplicação utilizando Docker para resolver desafios comuns de desenvolvimento e deploy:
+
+    Portabilidade: Garantir que a aplicação rode em qualquer máquina que tenha o Docker instalado, independentemente do sistema operacional ou das bibliotecas já instaladas.
+
+    Gerenciamento de Dependências: Isolar a aplicação e suas dependências, evitando conflitos com outras aplicações na mesma máquina.
+
+    Ambiente Reproduzível: Criar uma imagem imutável que garanta que o ambiente de desenvolvimento, teste e produção seja exatamente o mesmo.
+
+Tecnologias Utilizadas:
+
+    Linguagem: Python 3.11
+
+    Framework: Streamlit
+
+    Containerização: Docker
+
+    Ambiente de Desenvolvimento: Arch Linux (em VM VirtualBox)
+
+2. O Processo de Containerização
+
+A base da containerização é o Dockerfile, um arquivo de texto que contém a "receita" para construir a imagem da nossa aplicação.
+
+2.1. O Dockerfile Final
+
+Após um processo iterativo de depuração, a versão final e funcional do Dockerfile foi a seguinte:
+Dockerfile
+
+# Passo 1: Definir a Imagem Base
+# Utiliza uma imagem oficial e leve do Python 3.11, que é compatível com as dependências do projeto.
+FROM python:3.11-slim
+
+# Passo 2: Definir o Diretório de Trabalho
+# Cria e define o diretório /app como a área de trabalho padrão dentro do contêiner.
+WORKDIR /app
+
+# Passo 3: Instalar as Dependências
+# Copia o arquivo de requisitos e executa o pip install.
+# Este passo é feito antes de copiar o resto do código para otimizar o cache de camadas do Docker.
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Passo 4: Copiar o Código da Aplicação
+# Copia todos os arquivos do projeto (scripts .py, arquivos .csv, etc.) para o contêiner.
+COPY . .
+
+# Passo 5: Definir o Comando de Execução
+# Define o comando que será executado quando o contêiner iniciar.
+# Utiliza o comando nativo do Streamlit, expondo o servidor na porta 8050 e em todas as interfaces de rede (0.0.0.0).
+CMD ["streamlit", "run", "app.py", "--server.port=8050", "--server.address=0.0.0.0"]
+
+2.2. Gerenciamento de Segredos (Boas Práticas)
+
+A aplicação requer credenciais (usuários, senhas, chaves de e-mail). Para evitar expor esses dados, foi adotada a estratégia de gerenciamento de segredos via variáveis de ambiente, utilizando um arquivo .env que é ignorado pelo Git (via .gitignore). Um arquivo de exemplo, .env.example, foi criado para documentar as variáveis necessárias.
+
+3. Troubleshooting: Desafios Encontrados e Soluções
+
+O processo de construção e execução da imagem apresentou diversos desafios, cada um gerando um aprendizado valioso.
+
+    Problema 1: Dockerfile not found
+
+        Sintoma: O comando docker build falhava, alegando que o Dockerfile não existia.
+
+        Diagnóstico: Permissões restritivas no diretório /home/Jr impediam que o daemon do Docker (serviço) lesse o contexto de build.
+
+        Solução: Ajuste da permissão do diretório home com chmod o+x /home/Jr para permitir que o daemon "atravessasse" o diretório para ler os arquivos.
+
+    Problema 2: Conflito de Versão (Python vs. Numpy)
+
+        Sintoma: O pip install dentro do contêiner falhava com o erro No matching distribution found for numpy==2.2.2.
+
+        Diagnóstico: A versão do numpy especificada no requirements.txt exigia uma versão de Python (>=3.10) mais nova do que a que estava na imagem base inicial (python:3.9-slim).
+
+        Solução: Atualização da instrução FROM no Dockerfile para python:3.11-slim.
+
+    Problema 3: Erro de Runtime (FileNotFoundError: No secrets found)
+
+        Sintoma: O contêiner iniciava, mas a aplicação Python falhava imediatamente.
+
+        Diagnóstico: A aplicação necessitava de múltiplas credenciais (usuários, senhas, e-mails) que não estavam sendo fornecidas ao ambiente.
+
+        Solução: Utilização da flag -e no comando docker run para injetar cada segredo necessário como uma variável de ambiente no momento da execução.
+
+    Problema 4: Erro de Rede (Connection Refused)
+
+        Sintoma: O contêiner rodava, o servidor parecia ativo, mas o acesso via http://localhost:8050 no navegador era recusado.
+
+        Diagnóstico: O servidor Streamlit, por padrão, estava escutando apenas no endereço de loopback (127.0.0.1) dentro do contêiner, recusando conexões externas vindas da "ponte" de rede do Docker.
+
+        Solução: Modificação da instrução CMD no Dockerfile para incluir o parâmetro --server.address=0.0.0.0, forçando o servidor a escutar em todas as interfaces de rede e a aceitar a conexão externa.
+
+4. Como Executar o Projeto
+
+    Clone o repositório:
+    Bash
+
+git clone https://github.com/lucasevangelis/Dash-atualizado.git
+cd Dash-atualizado
+
+Configure os segredos:
+Copie o arquivo de exemplo cp .env.example .env e preencha o novo arquivo .env com suas credenciais.
+
+Construa a imagem Docker:
+Bash
+
+docker build -t meu-dashboard .
+
+Execute o contêiner:
+O Docker irá ler as variáveis do arquivo .env automaticamente (se usando Docker Compose) ou você pode passá-las manualmente. Para este projeto, o comando final foi:
+Bash
+
+    docker run -p 8050:8050 -e VARIAVEL_1="valor1" -e VARIAVEL_2="valor2" ... meu-dashboard
+
+    (Nota: Um passo futuro seria adicionar o Docker Compose para gerenciar as variáveis de ambiente de forma mais elegante).
+
+    Acesse o dashboard:
+    Abra seu navegador e acesse http://localhost:8050.
+
+5. Conclusão e Habilidades Demonstradas
+
+Este projeto foi um exercício prático e profundo que solidificou competências em:
+
+    Docker: Criação de Dockerfiles, construção de imagens (docker build), execução de contêineres (docker run), e gerenciamento de rede (-p).
+
+    Gerenciamento de Dependências: Uso de pip e requirements.txt em um ambiente isolado.
+
+    Troubleshooting: Diagnóstico e resolução de problemas de permissões, versões, configuração de aplicação e rede.
+
+    Boas Práticas de Segurança: Gerenciamento de segredos utilizando variáveis de ambiente 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Checklist Pisos
 Este projeto é um **dashboard interativo** desenvolvido em **Python** usando **Streamlit**, **Plotly** e **Pandas**. Ele permite analisar dados relacionados a pisos, suas posições e observações críticas, fornecendo insights por meio de gráficos interativos e indicadores chave.
 
